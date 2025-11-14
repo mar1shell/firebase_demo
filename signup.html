@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Firebase Demo</title>
+    <title>Sign Up - Firebase Demo</title>
 
     <style>
       body {
@@ -39,7 +39,7 @@
         margin-bottom: 1rem;
         border: 1px solid #ccc;
         border-radius: 4px;
-        box-sizing: border-box; /* Important */
+        box-sizing: border-box;
       }
       button {
         width: 100%;
@@ -48,9 +48,13 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        background: #007bff;
+        background: #28a745;
         color: white;
         font-size: 1rem;
+      }
+      button:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
       }
       p {
         text-align: center;
@@ -66,17 +70,20 @@
   </head>
   <body>
     <div class="container">
-      <h1>Login</h1>
-      <form id="login-form">
-        <label for="login-email">Email:</label>
-        <input type="email" id="login-email" required />
+      <h1>Sign Up</h1>
+      <form id="signup-form">
+        <label for="signup-email">Email:</label>
+        <input type="email" id="signup-email" required />
 
-        <label for="login-password">Password:</label>
-        <input type="password" id="login-password" required />
+        <label for="signup-password">Password:</label>
+        <input type="password" id="signup-password" required minlength="6" />
 
-        <button typeF="submit" id="login-button">Login</button>
+        <label for="signup-confirm-password">Confirm Password:</label>
+        <input type="password" id="signup-confirm-password" required minlength="6" />
+
+        <button type="submit" id="signup-button">Sign Up</button>
       </form>
-      <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+      <p>Already have an account? <a href="index.html">Login</a></p>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -84,6 +91,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
     <script src="js/firebase-config.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="js/signup.js"></script>
   </body>
 </html>

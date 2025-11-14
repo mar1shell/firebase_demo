@@ -1,7 +1,4 @@
 // js/auth.js
-import { auth } from "./firebase-config.js";
-import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-
 // Sélection du formulaire
 const loginForm = document.getElementById("login-form");
 
@@ -17,14 +14,17 @@ loginForm.addEventListener("submit", async (e) => {
   loginButton.textContent = "Logging in...";
 
   try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const userCredential = await auth.signInWithEmailAndPassword(
+      email,
+      password
+    );
     const user = userCredential.user;
 
     // Connexion réussie
     alert(`Login successful! UID: ${user.uid}`);
 
-    // Redirection vers la page d'accueil ou dashboard
-    window.location.href = "index.html"; // change selon ton besoin
+    // Redirection vers la page de profil
+    window.location.href = "profile.html";
   } catch (error) {
     // Gestion des erreurs
     let message = "";

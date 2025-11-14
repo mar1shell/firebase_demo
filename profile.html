@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - Firebase Demo</title>
+    <title>Profile - Firebase Demo</title>
 
     <style>
       body {
@@ -18,65 +18,64 @@
         padding: 2rem;
         border-radius: 8px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        width: 350px;
+        width: 450px;
       }
       h1 {
         text-align: center;
         margin-top: 0;
+        color: #333;
       }
-      form {
+      .profile-info {
+        margin: 2rem 0;
+      }
+      .info-row {
         display: flex;
-        flex-direction: column;
-      }
-      label {
+        justify-content: space-between;
+        padding: 1rem;
         margin-bottom: 0.5rem;
-        font-weight: bold;
-      }
-      input[type="email"],
-      input[type="password"] {
-        width: 100%;
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-        border: 1px solid #ccc;
+        background: #f8f9fa;
         border-radius: 4px;
-        box-sizing: border-box; /* Important */
+      }
+      .info-label {
+        font-weight: bold;
+        color: #555;
+      }
+      .info-value {
+        color: #333;
+        word-break: break-all;
+      }
+      .loading {
+        text-align: center;
+        color: #666;
+        padding: 2rem;
       }
       button {
         width: 100%;
         padding: 0.75rem;
-        margin-bottom: 1rem;
+        margin-top: 1rem;
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        background: #007bff;
+        background: #dc3545;
         color: white;
         font-size: 1rem;
       }
-      p {
-        text-align: center;
+      button:hover {
+        background: #c82333;
       }
-      a {
-        color: #007bff;
-        text-decoration: none;
-      }
-      a:hover {
-        text-decoration: underline;
+      button:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
       }
     </style>
   </head>
   <body>
     <div class="container">
-      <h1>Login</h1>
-      <form id="login-form">
-        <label for="login-email">Email:</label>
-        <input type="email" id="login-email" required />
-
-        <label for="login-password">Password:</label>
-        <input type="password" id="login-password" required />
-
-        <button typeF="submit" id="login-button">Login</button>
-      </form>
-      <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+      <h1>User Profile</h1>
+      <div id="profile-content" class="loading">
+        Loading user information...
+      </div>
+      <button id="logout-button">Logout</button>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -84,6 +83,6 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
     <script src="js/firebase-config.js"></script>
-    <script src="js/auth.js"></script>
+    <script src="js/profile.js"></script>
   </body>
 </html>
