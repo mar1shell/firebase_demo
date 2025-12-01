@@ -6,76 +6,239 @@
     <title>Profile - Firebase Demo</title>
 
     <style>
+      :root{
+        --bg: #f4f6f8;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --accent: #0b74de;
+        --accent-strong: #0066c1;
+        --danger: #dc3545;
+        --surface-shadow: 0 6px 18px rgba(11, 116, 222, 0.06);
+        --radius: 12px;
+        --container-w: 760px;
+      }
+
+      html,body{height:100%}
       body {
-        font-family: sans-serif;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        background: linear-gradient(180deg, #f7fbff 0%, var(--bg) 100%);
+        color: #111827;
+        -webkit-font-smoothing:antialiased;
+      }
+
+      .container {
+        width: min(94%, var(--container-w));
+        background: var(--card);
+        padding: 1.25rem;
+        border-radius: var(--radius);
+        box-shadow: var(--surface-shadow);
+        box-sizing: border-box;
+        position: relative;
+      }
+
+      .header {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        border-bottom: 1px solid #eef2f7;
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .avatar {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #e6f0ff, #dbeafe);
         display: grid;
         place-items: center;
-        min-height: 90vh;
-        background: #f4f4f4;
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 20px;
+        flex: 0 0 68px;
       }
-      .container {
-        background: #fff;
-        padding: 2rem;
+
+      .user-meta {
+        flex: 1;
+      }
+
+      .user-meta h1 {
+        margin: 0;
+        font-size: 1.25rem;
+        letter-spacing: -0.2px;
+      }
+
+      .user-meta p {
+        margin: 0.15rem 0 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      /* Logout placed in header, aligned to the right */
+      .logout-top {
+        margin-left: auto;          /* push to far right of header */
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+        background: transparent;
+        color: var(--danger);
+        font-weight: 700;
+        cursor: pointer;
+        padding: 6px 8px;
         border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        width: 450px;
       }
-      h1 {
-        text-align: center;
-        margin-top: 0;
-        color: #333;
+      .logout-top:hover {
+        background: rgba(220, 53, 69, 0.08);
       }
-      .profile-info {
-        margin: 2rem 0;
+      .logout-top:focus { outline: 3px solid rgba(220,53,69,0.12); }
+
+      .logout-top svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+        display: block;
       }
-      .info-row {
+
+      /* Main layout */
+      .profile-main {
+        display: block;
+      }
+
+      .info-list {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .info-row {
+        display: grid;
+        grid-template-columns: 1fr minmax(160px, 1fr);
+        gap: 0.75rem;
+        align-items: center;
         padding: 1rem;
-        margin-bottom: 0.5rem;
-        background: #f8f9fa;
-        border-radius: 4px;
+        margin-bottom: 0.6rem;
+        background: linear-gradient(180deg,#fbfdff,#ffffff);
+        border: 1px solid #f0f4f8;
+        border-radius: 8px;
       }
+
       .info-label {
-        font-weight: bold;
-        color: #555;
+        font-size: 0.9rem;
+        color: var(--muted);
+        font-weight: 600;
       }
+
       .info-value {
-        color: #333;
+        font-size: 0.95rem;
+        color: #0f1724;
+        text-align: right;
         word-break: break-all;
       }
-      .loading {
-        text-align: center;
-        color: #666;
-        padding: 2rem;
-      }
-      button {
+
+      input.inline-input, textarea.inline-input{
         width: 100%;
-        padding: 0.75rem;
+        padding: 0.5rem;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        font-size: 0.95rem;
+      }
+
+      /* Controls area: full width, below the profile info */
+      .controls-row {
         margin-top: 1rem;
-        border: none;
-        border-radius: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .controls {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+      }
+
+      .controls .small-btn {
+        min-width: 160px;
+        padding: 0.6rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
         cursor: pointer;
-        background: #dc3545;
+        border: 1px solid transparent;
+        background: linear-gradient(180deg,var(--accent),var(--accent-strong));
         color: white;
-        font-size: 1rem;
       }
-      button:hover {
-        background: #c82333;
+
+      .controls .small-btn.secondary {
+        background: transparent;
+        color: var(--accent-strong);
+        border: 1px solid #e0e7ff;
       }
-      button:disabled {
-        background: #6c757d;
-        cursor: not-allowed;
+
+      #save-profile {
+        background: linear-gradient(180deg,#10b981,#059669);
+        color: #fff;
+        border-color: transparent;
+      }
+      #cancel-edit {
+        background: transparent;
+        color: var(--accent-strong);
+        border: 1px solid #e0e7ff;
+      }
+
+      @media (max-width: 640px) {
+        .controls {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .controls .small-btn {
+          width: 100%;
+          min-width: 0;
+        }
+        .logout-top{ margin-left: 0; align-self:flex-start; } /* on mobile keep normal flow */
+      }
+
+      .hint {
+        font-size: 0.9rem;
+        color: var(--muted);
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>User Profile</h1>
-      <div id="profile-content" class="loading">
-        Loading user information...
+    <div class="container" role="main" aria-labelledby="profile-heading">
+      <div class="header">
+        <div class="avatar" aria-hidden="true">U</div>
+        <div class="user-meta">
+          <h1 id="profile-heading">User Profile</h1>
+        </div>
+
+        <!-- logout moved into header and aligned right with margin-left:auto -->
+        <button id="logout-button" class="logout-top" aria-label="Logout">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M13 3h-2v10h2V3zm4.95 3.05l-1.414 1.414A7.963 7.963 0 0 1 20 12c0 4.418-3.582 8-8 8s-8-3.582-8-8c0-1.885.64-3.62 1.71-5.012L4.05 6.05A9.958 9.958 0 0 0 2 12c0 5.523 4.477 10 10 10s10-4.477 10-10a9.958 9.958 0 0 0-3.05-6.95z"/></svg>
+          Logout
+        </button>
       </div>
-      <button id="logout-button">Logout</button>
+
+      <main class="profile-main">
+        <section id="profile-content" class="info-list loading" aria-labelledby="profile-heading">
+          Loading user information...
+        </section>
+
+        <div class="controls-row">
+          <div id="profile-controls" class="controls" aria-label="Profile actions">
+            <button id="edit-toggle" class="small-btn">Modifier</button>
+            <button id="save-profile" class="small-btn" style="display:none;">Save Changes</button>
+            <button id="cancel-edit" class="small-btn secondary" style="display:none;">Cancel</button>
+          </div>
+        </div>
+      </main>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -83,6 +246,236 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
     <script src="js/firebase-config.js"></script>
-    <script src="js/profile.js"></script>
+    <script>
+      // js/profile.js (updated: show username in header, fallback to email prefix)
+const profileContent = document.getElementById("profile-content");
+const logoutButton = document.getElementById("logout-button");
+const saveButton = document.getElementById("save-profile");
+const editToggle = document.getElementById("edit-toggle");
+const cancelButton = document.getElementById("cancel-edit");
+const avatarEl = document.querySelector(".avatar");
+const headingEl = document.getElementById("profile-heading");
+
+// Small helpers
+let editMode = false;
+
+function escapeHtml(unsafe) {
+  if (unsafe == null) return "";
+  return String(unsafe)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function getDisplayName(user, data) {
+  // Prefer explicit username from Firestore; fall back to the email local-part; final fallback "User"
+  const username = data && data.username ? String(data.username).trim() : "";
+  if (username) return username;
+  if (user && user.email) {
+    const local = String(user.email).split("@")[0];
+    return local || "User";
+  }
+  return "User";
+}
+
+function updateHeaderAndAvatar(user, data) {
+  const name = getDisplayName(user, data);
+  if (headingEl) headingEl.textContent = name;
+  if (avatarEl) avatarEl.textContent = (name && name[0]) ? name[0].toUpperCase() : "U";
+}
+
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    const userDoc = await db.collection("users").doc(user.uid).get();
+    const data = userDoc.exists ? userDoc.data() : {};
+    displayUserInfo(user, data);
+  } else {
+    window.location.href = "index.html";
+  }
+});
+
+function renderInfoRow(label, value, field) {
+  const safe = escapeHtml(value == null ? "" : value);
+  const display = safe;
+  return `
+    <div class="info-row">
+      <div class="info-label">${label}</div>
+      <div class="info-value" data-field="${field}">${display}</div>
+    </div>
+  `;
+}
+
+function displayUserInfo(user, data) {
+  const createdAt = user.metadata && user.metadata.creationTime
+    ? new Date(user.metadata.creationTime).toLocaleString("fr-FR")
+    : "";
+  const lastSignIn = user.metadata && user.metadata.lastSignInTime
+    ? new Date(user.metadata.lastSignInTime).toLocaleString("fr-FR")
+    : "";
+
+  profileContent.innerHTML = `
+    <div class="info-list">
+      ${renderInfoRow("Email", user.email || "", "email")}
+      ${renderInfoRow("User ID", user.uid || "", "userId")}
+      ${renderInfoRow("Email Verified", user.emailVerified ? "Yes ✓" : "No ✗", "emailVerified")}
+      ${renderInfoRow("Account Created", createdAt, "accountCreated")}
+      ${renderInfoRow("Last Sign In", lastSignIn, "lastSignIn")}
+      ${renderInfoRow("Username", data.username || "", "username")}
+      ${renderInfoRow("Bio", data.bio || "", "bio")}
+    </div>
+  `;
+
+  // Update the header and avatar using the username or email prefix
+  updateHeaderAndAvatar(user, data);
+
+  enterViewMode();
+}
+
+function enterViewMode() {
+  editMode = false;
+  editToggle.style.display = "inline-block";
+  saveButton.style.display = "none";
+  cancelButton.style.display = "none";
+  saveButton.disabled = true;
+  editToggle.textContent = "Edit Profile";
+}
+
+editToggle.addEventListener("click", () => {
+  const usernameSpan = profileContent.querySelector('[data-field="username"]');
+  const bioSpan = profileContent.querySelector('[data-field="bio"]');
+  if (!usernameSpan || !bioSpan) return;
+
+  editMode = true;
+  editToggle.style.display = "none";
+  saveButton.style.display = "inline-block";
+  cancelButton.style.display = "inline-block";
+  saveButton.disabled = false;
+
+  const usernameVal = (usernameSpan.textContent || "").trim();
+  const bioVal = (bioSpan.textContent || "").trim();
+
+  usernameSpan.innerHTML = `<input id="inline-username" class="inline-input" value="${escapeHtml(usernameVal)}">`;
+  bioSpan.innerHTML = `<textarea id="inline-bio" class="inline-input" rows="3">${escapeHtml(bioVal)}</textarea>`;
+});
+
+cancelButton.addEventListener("click", () => {
+  const usernameSpan = profileContent.querySelector('[data-field="username"]');
+  const bioSpan = profileContent.querySelector('[data-field="bio"]');
+  if (!usernameSpan || !bioSpan) return;
+
+  const inlineUsername = document.getElementById("inline-username");
+  const inlineBio = document.getElementById("inline-bio");
+
+  const usernameVal = inlineUsername ? (inlineUsername.defaultValue || "") : (usernameSpan.textContent || "");
+  const bioVal = inlineBio ? (inlineBio.defaultValue || "") : (bioSpan.textContent || "");
+
+  usernameSpan.textContent = usernameVal;
+  bioSpan.textContent = bioVal;
+
+  // Update header/avatar to reflect cancelled (restored) value
+  updateHeaderAndAvatar(auth.currentUser, { username: usernameVal });
+
+  enterViewMode();
+});
+
+saveButton.addEventListener("click", async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const inlineUsername = document.getElementById("inline-username");
+  const inlineBio = document.getElementById("inline-bio");
+
+  const username = inlineUsername ? inlineUsername.value.trim() : (profileContent.querySelector('[data-field="username"]')?.textContent || "");
+  const bio = inlineBio ? inlineBio.value.trim() : (profileContent.querySelector('[data-field="bio"]')?.textContent || "");
+
+  const updateData = {
+    email: user.email || "",
+    userId: user.uid || "",
+    emailVerified: !!user.emailVerified,
+    username: username,
+    bio: bio
+  };
+
+  try { await user.reload(); } catch(e){}
+
+  try {
+    if (user.metadata && user.metadata.creationTime) {
+      updateData.accountCreated = firebase.firestore.Timestamp.fromDate(new Date(user.metadata.creationTime));
+    } else {
+      updateData.accountCreated = firebase.firestore.FieldValue.serverTimestamp();
+    }
+    if (user.metadata && user.metadata.lastSignInTime) {
+      updateData.lastSignIn = firebase.firestore.Timestamp.fromDate(new Date(user.metadata.lastSignInTime));
+    } else {
+      updateData.lastSignIn = firebase.firestore.FieldValue.serverTimestamp();
+    }
+  } catch (err) {
+    updateData.accountCreated = firebase.firestore.FieldValue.serverTimestamp();
+    updateData.lastSignIn = firebase.firestore.FieldValue.serverTimestamp();
+  }
+
+  saveButton.disabled = true;
+  saveButton.textContent = "Saving...";
+
+  try {
+    await db.collection("users").doc(user.uid).set(updateData, { merge: true });
+
+    const usernameSpan = profileContent.querySelector('[data-field="username"]');
+    const bioSpan = profileContent.querySelector('[data-field="bio"]');
+    const emailSpan = profileContent.querySelector('[data-field="email"]');
+    const userIdSpan = profileContent.querySelector('[data-field="userId"]');
+    const emailVerifiedSpan = profileContent.querySelector('[data-field="emailVerified"]');
+    const accountCreatedSpan = profileContent.querySelector('[data-field="accountCreated"]');
+    const lastSignInSpan = profileContent.querySelector('[data-field="lastSignIn"]');
+
+    if (usernameSpan) usernameSpan.textContent = username;
+    if (bioSpan) bioSpan.textContent = bio;
+    if (emailSpan) emailSpan.textContent = user.email || "";
+    if (userIdSpan) userIdSpan.textContent = user.uid || "";
+    if (emailVerifiedSpan) emailVerifiedSpan.textContent = user.emailVerified ? "Yes ✓" : "No ✗";
+
+    if (accountCreatedSpan) {
+      accountCreatedSpan.textContent = user.metadata && user.metadata.creationTime
+        ? new Date(user.metadata.creationTime).toLocaleString("fr-FR")
+        : "";
+    }
+    if (lastSignInSpan) {
+      lastSignInSpan.textContent = user.metadata && user.metadata.lastSignInTime
+        ? new Date(user.metadata.lastSignInTime).toLocaleString("fr-FR")
+        : "";
+    }
+
+    // Update header and avatar with the newly saved username (or email fallback)
+    updateHeaderAndAvatar(user, { username });
+
+    saveButton.textContent = "Save Changes";
+    enterViewMode();
+
+    alert("Profile updated and fields saved to Firestore!");
+  } catch (error) {
+    console.error("Error saving profile:", error);
+    alert("Error saving profile: " + (error.message || error));
+    saveButton.disabled = false;
+    saveButton.textContent = "Save Changes";
+  }
+});
+
+logoutButton.addEventListener("click", async () => {
+  logoutButton.disabled = true;
+  logoutButton.textContent = "Logging out...";
+
+  try {
+    await auth.signOut();
+    alert("Signed out!");
+    window.location.href = "index.html";
+  } catch (error) {
+    alert(`Logout error: ${error.message}`);
+    logoutButton.disabled = false;
+    logoutButton.textContent = "Logout";
+  }
+});
+    </script>
   </body>
 </html>

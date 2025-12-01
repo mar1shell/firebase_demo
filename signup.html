@@ -3,87 +3,240 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up - Firebase Demo</title>
+    <title>Sign Up / Login - Firebase Demo</title>
 
     <style>
+      :root{
+        --bg: #f4f6f9;
+        --card: #ffffff;
+        --muted: #6b7280;
+        --accent: #0b74de;
+        --accent-strong: #005ec4;
+        --success: #28a745;
+        --danger: #dc3545;
+        --muted-bg: #f8fafc;
+        --radius: 12px;
+        --container-w: 420px;
+        --shadow: 0 6px 20px rgba(8,30,63,0.08);
+      }
+
+      html,body{height:100%}
       body {
-        font-family: sans-serif;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
         display: grid;
         place-items: center;
-        min-height: 90vh;
-        background: #f4f4f4;
+        min-height: 100vh;
+        margin: 0;
+        background: linear-gradient(180deg,#f7fbff,#eef5fb 60%);
+        color: #0f1724;
+        -webkit-font-smoothing:antialiased;
       }
+
       .container {
-        background: #fff;
+        background: var(--card);
         padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        width: 350px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        width: min(92%, var(--container-w));
+        box-sizing: border-box;
+        border: 1px solid rgba(15,23,36,0.04);
       }
+
       h1 {
         text-align: center;
-        margin-top: 0;
+        margin: 0 0 0.5rem 0;
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: #0b1220;
       }
-      form {
+
+      .mode-switch {
         display: flex;
-        flex-direction: column;
+        gap: 0.5rem;
+        margin: 0.5rem 0 1rem;
+        justify-content: center;
       }
-      label {
-        margin-bottom: 0.5rem;
-        font-weight: bold;
-      }
-      input[type="email"],
-      input[type="password"] {
-        width: 100%;
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        box-sizing: border-box;
-      }
-      button {
-        width: 100%;
-        padding: 0.75rem;
-        margin-bottom: 1rem;
-        border: none;
-        border-radius: 4px;
+
+      .mode-switch button {
+        padding: 0.45rem 0.75rem;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        background: transparent;
         cursor: pointer;
-        background: #28a745;
-        color: white;
-        font-size: 1rem;
+        font-weight: 600;
+        color: var(--muted);
+        transition: all 140ms ease;
+        box-shadow: none;
       }
-      button:disabled {
-        background: #6c757d;
-        cursor: not-allowed;
+
+      .mode-switch button.active {
+        background: linear-gradient(180deg,var(--accent),var(--accent-strong));
+        color: #fff;
+        border-color: transparent;
+        box-shadow: 0 4px 12px rgba(11,116,222,0.12);
       }
-      p {
+
+      form { display:flex; flex-direction:column; gap:0.6rem; }
+
+      .hint {
+        font-size: 0.95rem;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
         text-align: center;
       }
-      a {
-        color: #007bff;
-        text-decoration: none;
+
+      label {
+        margin: 0 0 0.25rem 0;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: #0b1220;
       }
-      a:hover {
-        text-decoration: underline;
+
+      input[type="email"],
+      input[type="password"],
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 0.75rem 0.85rem;
+        margin: 0;
+        border: 1px solid #e6eef8;
+        border-radius: 10px;
+        background: #fff;
+        box-sizing: border-box;
+        font-size: 0.95rem;
+        color: #0b1220;
+        transition: box-shadow 120ms ease, border-color 120ms ease;
+        outline: none;
+      }
+
+      input:focus, textarea:focus {
+        border-color: var(--accent-strong);
+        box-shadow: 0 6px 18px rgba(11,116,222,0.08);
+      }
+
+      textarea { min-height: 84px; resize: vertical; }
+
+      .actions {
+        display: flex;
+        gap: 0.6rem;
+        margin-top: 0.5rem;
+      }
+
+      button.primary {
+        flex: 1;
+        padding: 0.85rem;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        background: linear-gradient(180deg,var(--success),#1f7a48);
+        color: white;
+        font-size: 1rem;
+        font-weight: 700;
+        box-shadow: 0 6px 18px rgba(39,174,96,0.08);
+        transition: transform 120ms ease, box-shadow 120ms ease;
+      }
+      button.primary:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(39,174,96,0.12); }
+      button.primary:active { transform: translateY(0); }
+
+      button.secondary {
+        flex: 1;
+        padding: 0.85rem;
+        border: 1px solid rgba(11,116,222,0.12);
+        border-radius: 10px;
+        cursor: pointer;
+        background: white;
+        color: var(--accent-strong);
+        font-size: 1rem;
+        font-weight: 700;
+        transition: background 120ms ease, color 120ms ease;
+      }
+      button.secondary:hover { background: var(--muted-bg); }
+
+      button:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      #check-account {
+        width: 100%;
+        padding: 0.7rem;
+        border-radius: 10px;
+        border: 1px solid rgba(15,23,36,0.06);
+        background: #fff;
+        color: var(--accent-strong);
+        font-weight: 700;
+        margin-top: 0.4rem;
+      }
+
+      p { text-align:center; margin-top: 0.9rem; color: var(--muted); font-size:0.95rem; }
+      a { color: var(--accent-strong); text-decoration: none; font-weight: 600; }
+      a:hover { text-decoration: underline; }
+
+      /* Responsive adjustments */
+      @media (max-width:420px) {
+        .container { padding: 1.25rem; width: calc(100% - 32px); }
+        .mode-switch { gap: 0.35rem; }
+        button.primary, button.secondary { font-size: 0.95rem; padding: 0.7rem; }
+      }
+
+      /* Accessible focus outline for keyboard users */
+      :focus-visible {
+        outline: 3px solid rgba(11,116,222,0.14);
+        outline-offset: 2px;
+      }
+
+      /* Layout reverse for login mode */
+      .reverse {
+        flex-direction: row-reverse;
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Sign Up</h1>
+    <div class="container" id="main-container">
+      <h1 id="form-title">Sign Up</h1>
+
+      <div class="mode-switch" role="tablist" aria-label="Mode">
+        <button id="mode-signup" class="active" type="button" aria-pressed="true">Sign Up</button>
+        <button id="mode-login" type="button" aria-pressed="false">Sign in</button>
+      </div>
+
       <form id="signup-form">
+        <div class="hint" id="mode-hint">Create a new account or switch  to sign in.</div>
+
         <label for="signup-email">Email:</label>
-        <input type="email" id="signup-email" required />
+        <input type="email" id="signup-email" required value="user@gmail.com"/>
 
         <label for="signup-password">Password:</label>
-        <input type="password" id="signup-password" required minlength="6" />
+        <input type="password" id="signup-password" required minlength="6" value="user123"/>
 
-        <label for="signup-confirm-password">Confirm Password:</label>
-        <input type="password" id="signup-confirm-password" required minlength="6" />
+        <!-- Confirm password only for sign up -->
+        <div id="confirm-password-row">
+          <label for="signup-confirm-password">Confirm Password:</label>
+          <input type="password" id="signup-confirm-password" required minlength="6" />
+        </div>
 
-        <button type="submit" id="signup-button">Sign Up</button>
-      </form>
-      <p>Already have an account? <a href="index.html">Login</a></p>
+        <!-- Optional fields for signup only -->
+        <div id="extra-signup-fields">
+          <label for="signup-username">Username (optional):</label>
+          <input type="text" id="signup-username" placeholder="Votre pseudo" />
+
+          <label for="signup-bio">Bio (optional):</label>
+          <textarea id="signup-bio" rows="3" placeholder="Une courte bio"></textarea>
+        </div>
+
+        <div class="actions">
+          <button type="submit" id="signup-button" class="primary">Sign Up</button>
+        </div>
+
+        
+
+      <!-- Visual elements for illustration -->
+      <div style="margin-top: 1.5rem; text-align: center;">
+        <div id="visual-title" style="font-size: 1.1rem; font-weight: 600; color: #0b1220;"></div>
+        <div id="visual-sub" style="font-size: 0.9rem; color: var(--muted);"></div>
+      </div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>

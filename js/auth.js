@@ -20,6 +20,15 @@ loginForm.addEventListener("submit", async (e) => {
     );
     const user = userCredential.user;
 
+    // 🔥 Charger les données Firestore de l'utilisateur
+    const doc = await db.collection("users").doc(user.uid).get();
+
+    if (doc.exists) {
+      // Tu peux stocker dans localStorage si tu veux les afficher ensuite
+      localStorage.setItem("username", doc.data().username || "");
+      localStorage.setItem("bio", doc.data().bio || "");
+    }
+
     // Connexion réussie
     alert(`Login successful! UID: ${user.uid}`);
 
